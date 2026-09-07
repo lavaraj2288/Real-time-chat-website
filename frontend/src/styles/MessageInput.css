@@ -1,0 +1,88 @@
+.message-input-area {
+  padding: 12px 20px 16px;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+.quick-emojis {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.emoji-pill {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.1s;
+}
+
+.emoji-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: scale(1.15);
+}
+
+.input-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-form:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
+
+.chat-textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+  resize: none;
+  max-height: 120px;
+  min-height: 24px;
+  padding: 4px 0;
+}
+
+.chat-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.btn-send {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s, transform 0.1s, opacity 0.2s;
+}
+
+.btn-send:hover:not(:disabled) {
+  background: var(--accent-primary-hover);
+  transform: scale(1.05);
+}
+
+.btn-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-send svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
