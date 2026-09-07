@@ -47,6 +47,40 @@ const io = new Server(server, {
 // Setup Socket Handlers
 setupChatSocket(io);
 
+// Root status page
+app.get('/', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>PulseChat Backend API</title>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b1120; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+          .card { background: #1e293b; padding: 32px 40px; border-radius: 16px; border: 1px solid #334155; text-align: center; max-width: 480px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+          .badge { display: inline-block; background: #10b981; color: white; padding: 4px 12px; border-radius: 9999px; font-weight: bold; font-size: 13px; margin-bottom: 16px; }
+          h1 { margin: 0 0 8px 0; font-size: 24px; }
+          p { color: #94a3b8; font-size: 14px; line-height: 1.5; margin: 0 0 20px 0; }
+          .endpoints { text-align: left; background: #0f172a; padding: 14px 18px; border-radius: 8px; font-family: monospace; font-size: 13px; }
+          .endpoints div { margin: 6px 0; color: #38bdf8; }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <div class="badge">🟢 Backend Live & Healthy</div>
+          <h1>⚡ PulseChat API Server</h1>
+          <p>Real-time chat server powered by Express, Socket.io, and MongoDB Atlas.</p>
+          <div class="endpoints">
+            <div>GET /api/health → Server Health</div>
+            <div>GET /api/rooms → Chat Rooms</div>
+            <div>POST /api/auth/login → User Login</div>
+            <div>POST /api/auth/guest → Instant Guest</div>
+          </div>
+        </div>
+      </body>
+    </html>
+  `);
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({
