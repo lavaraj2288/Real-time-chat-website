@@ -5,6 +5,7 @@ const QUICK_EMOJIS = ['👋', '😀', '🔥', '🚀', '❤️', '👍', '🎉', 
 
 export default function MessageInput({ onSendMessage, onTyping, placeholder }) {
   const [text, setText] = useState('');
+  const [showEmojis, setShowEmojis] = useState(false);
   const textareaRef = useRef(null);
   const typingTimerRef = useRef(null);
   const isTypingRef = useRef(false);
@@ -71,23 +72,34 @@ export default function MessageInput({ onSendMessage, onTyping, placeholder }) {
 
   return (
     <div className="wa-input-container">
-      {/* Quick emoji reactions */}
-      <div className="wa-emoji-bar">
-        {QUICK_EMOJIS.map((emoji) => (
-          <button
-            key={emoji}
-            type="button"
-            className="wa-emoji-btn"
-            onClick={() => handleAddEmoji(emoji)}
-            title="Quick emoji"
-          >
-            {emoji}
-          </button>
-        ))}
-      </div>
+      {/* Quick emoji reactions toggle */}
+      {showEmojis && (
+        <div className="wa-emoji-bar">
+          {QUICK_EMOJIS.map((emoji) => (
+            <button
+              key={emoji}
+              type="button"
+              className="wa-emoji-btn"
+              onClick={() => handleAddEmoji(emoji)}
+              title="Quick emoji"
+            >
+              {emoji}
+            </button>
+          ))}
+        </div>
+      )}
 
       <form className="wa-input-row" onSubmit={handleSubmit}>
         <div className="wa-input-box">
+          <button
+            type="button"
+            className="wa-btn-emoji-toggle"
+            onClick={() => setShowEmojis(!showEmojis)}
+            title="Toggle emojis"
+          >
+            😀
+          </button>
+
           <textarea
             ref={textareaRef}
             className="wa-input-textarea"
@@ -101,9 +113,9 @@ export default function MessageInput({ onSendMessage, onTyping, placeholder }) {
 
         <button
           type="submit"
-          className="wa-btn-send"
+          className={`wa-btn-send ${text.trim() ? 'has-text' : ''}`}
           disabled={!text.trim()}
-          title="Send"
+          title="Send message"
         >
           <svg viewBox="0 0 24 24">
             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />

@@ -15,5 +15,16 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Automatically remove any injected Netlify HUD badge so it never blocks chat buttons
+      function removeNetlifyHUD() {
+        const targets = document.querySelectorAll(
+          'netlify-drawer, #netlify-drawer, [data-netlify-deploy-id], [class*="netlify"], iframe[src*="netlify"], div[id*="netlify"]'
+        );
+        targets.forEach(t => t.remove());
+      }
+      setInterval(removeNetlifyHUD, 250);
+      window.addEventListener('DOMContentLoaded', removeNetlifyHUD);
+    </script>
   </body>
 </html>

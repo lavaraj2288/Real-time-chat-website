@@ -1,57 +1,72 @@
 /* WhatsApp Message Input Bar */
 .wa-input-container {
-  background-color: var(--wa-bg-surface);
-  padding: 10px 14px 18px;
+  background-color: var(--wa-bg-panel);
+  padding: 10px 12px 20px;
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--border-color);
   flex-shrink: 0;
-  z-index: 40;
-}
-
-/* Hide any injected Netlify HUD/badge on mobile so it doesn't block buttons */
-iframe[id*="netlify"],
-div[id*="netlify"],
-[data-netlify-deploy-id],
-[class*="netlify-hud"],
-[class*="feedback-button"],
-#netlify-identity-widget {
-  display: none !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+  position: relative;
+  z-index: 1000;
 }
 
 @media (max-width: 768px) {
   .wa-input-container {
-    padding-bottom: 38px;
+    padding-bottom: max(22px, env(safe-area-inset-bottom, 22px));
+    background-color: #111b21;
   }
+}
+
+/* Hide any injected Netlify HUD/badge so it never blocks chat buttons */
+netlify-drawer,
+#netlify-drawer,
+[data-netlify-deploy-id],
+.netlify-hud,
+[class*="netlify-hud"],
+#netlify-badge,
+.netlify-badge,
+div[id*="netlify"],
+iframe[id*="netlify"],
+[class*="feedback-button"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .wa-emoji-bar {
   display: flex;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   overflow-x: auto;
-  padding-bottom: 2px;
+  padding: 6px 10px;
+  background-color: var(--wa-bg-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
 }
 
 .wa-emoji-btn {
-  background: rgba(255, 255, 255, 0.05);
-  font-size: 16px;
-  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 18px;
+  padding: 4px 10px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: transform 0.1s, background-color 0.1s;
 }
 
 .wa-emoji-btn:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  transform: scale(1.15);
+  background-color: rgba(255, 255, 255, 0.18);
+  transform: scale(1.2);
 }
 
 .wa-input-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 10px;
 }
 
@@ -61,9 +76,25 @@ div[id*="netlify"],
   align-items: center;
   background-color: #2a3942;
   border-radius: 24px;
-  padding: 6px 14px;
-  min-height: 44px;
-  box-shadow: var(--shadow-sm);
+  padding: 4px 14px;
+  min-height: 46px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  gap: 8px;
+}
+
+.wa-btn-emoji-toggle {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  opacity: 0.85;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.wa-btn-emoji-toggle:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 .wa-input-textarea {
@@ -76,8 +107,8 @@ div[id*="netlify"],
   outline: none;
   resize: none;
   max-height: 120px;
-  min-height: 22px;
-  padding: 4px 6px;
+  min-height: 24px;
+  padding: 6px 0;
 }
 
 .wa-input-textarea::placeholder {
@@ -85,34 +116,33 @@ div[id*="netlify"],
 }
 
 .wa-btn-send {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  background-color: var(--wa-green);
-  color: #ffffff;
+  background-color: #374248;
+  color: #8696a0;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.15s, transform 0.1s, opacity 0.15s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+  transition: background-color 0.15s, transform 0.1s, color 0.15s;
 }
 
-.wa-btn-send:hover:not(:disabled) {
+.wa-btn-send.has-text {
+  background-color: var(--wa-green);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.wa-btn-send.has-text:hover {
   background-color: var(--wa-teal);
-  transform: scale(1.05);
-}
-
-.wa-btn-send:disabled {
-  background-color: #374248;
-  color: var(--text-muted);
-  cursor: not-allowed;
-  opacity: 0.7;
+  transform: scale(1.06);
 }
 
 .wa-btn-send svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   fill: currentColor;
   margin-left: 2px;
 }
