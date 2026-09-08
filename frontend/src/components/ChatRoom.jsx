@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import MessageInput from './MessageInput';
-import TypingIndicator from './TypingIndicator';
 import '../styles/ChatRoom.css';
 
 export default function ChatRoom({
@@ -8,16 +7,14 @@ export default function ChatRoom({
   messages,
   currentUser,
   typingUsers,
+  onlineUsers,
   onSendMessage,
   onTyping,
-  onToggleSidebar,
-  isOnlineUsersOpen,
-  onToggleOnlineUsers,
-  onlineCount
+  onBackToChats,
+  onOpenGroupInfo
 }) {
   const messagesEndRef = useRef(null);
 
-  // Auto-scroll to bottom on new messages or typing changes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typingUsers]);
@@ -32,14 +29,10 @@ export default function ChatRoom({
     if (!isoDate) return '';
     const d = new Date(isoDate);
     const today = new Date();
-    if (d.toDateString() === today.toDateString()) {
-      return 'Today';
-    }
+    if (d.toDateString() === today.toDateString()) return 'Today';
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    if (d.toDateString() === yesterday.toDateString()) {
-      return 'Yesterday';
-    }
+    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
     return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
@@ -48,75 +41,78 @@ export default function ChatRoom({
     return name.slice(0, 2).toUpperCase();
   };
 
-  if (!room) {
-    return (
-      <div className="chat-center" style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
-          <h3>Select or create a channel to start chatting</h3>
-        </div>
-      </div>
-    );
+  // Generate subtitle text
+  let subtitleText = 'tap for group info';
+  const isSomeoneTyping = typingUsers && typingUsers.length > 0;
+
+  if (isSomeoneTyping) {
+    subtitleText = `${typingUsers.join(', ')} typing...`;
+  } else if (onlineUsers && onlineUsers.length > 0) {
+    const names = onlineUsers.map((u) => (u.username === currentUser?.username ? 'You' : u.username));
+    subtitleText = `🟢 ${names.join(', ')}`;
   }
 
-  // Group messages by date to render date separators
   let lastDate = null;
 
   return (
-    <div className="chat-center">
-      {/* Header */}
-      <header className="chat-header">
-        <div className="chat-header-left">
+    <div className="wa-chat-screen">
+      {/* WhatsApp Group Header */}
+      <header className="wa-group-header">
+        <div className="wa-header-left" onClick={onOpenGroupInfo} title="Group info">
           <button
             type="button"
-            className="btn-mobile-menu"
-            onClick={onToggleSidebar}
-            title="Open Channels"
+            className="wa-btn-back"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onBackToChats) onBackToChats();
+            }}
+            title="Back to chats"
           >
-            ☰
+            ‹
           </button>
-          <div className="header-room-details">
-            <div className="header-room-title">
-              <span className="prefix">#</span>
-              <span>{room.displayName || room.name}</span>
+          <div className="wa-group-avatar">
+            {getInitials(room?.displayName || room?.name || 'Group')}
+          </div>
+          <div className="wa-group-meta">
+            <div className="wa-group-title">
+              {room?.displayName || room?.name}
             </div>
-            <div className="header-room-topic">
-              {room.topic || 'Welcome to the room!'}
+            <div className={`wa-group-subtitle ${isSomeoneTyping ? 'typing' : ''}`}>
+              {subtitleText}
             </div>
           </div>
         </div>
 
-        <div className="chat-header-actions">
+        <div className="wa-header-right">
           <button
             type="button"
-            className={`btn-toggle-members ${isOnlineUsersOpen ? 'active' : ''}`}
-            onClick={onToggleOnlineUsers}
-            title="Toggle Members Panel"
+            className="wa-header-pill"
+            onClick={onOpenGroupInfo}
+            title="View online members"
           >
-            <span className="online-pill"></span>
-            <span>{onlineCount} Online</span>
+            <span className="wa-online-dot" />
+            <span>{onlineUsers?.length || 1} Online</span>
           </button>
         </div>
       </header>
 
-      {/* Messages Scroll Area */}
-      <div className="messages-container">
+      {/* Messages Feed */}
+      <div className="wa-messages-area">
         {messages.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: 36, marginBottom: 12 }}>💬</div>
-            <h3 style={{ color: 'var(--text-secondary)', marginBottom: 6 }}>
-              Welcome to #{room.displayName || room.name}!
-            </h3>
-            <p style={{ fontSize: 13 }}>
-              This is the start of the #{room.name} channel. Be the first to say hi!
-            </p>
+          <div className="wa-empty-chat">
+            <div className="wa-empty-icon">💬</div>
+            <div className="wa-empty-title">Welcome to #{room?.displayName || room?.name}!</div>
+            <div className="wa-empty-desc">
+              Messages are encrypted & stored in MongoDB. Be the first to send a message to the group!
+            </div>
           </div>
         ) : (
           messages.map((msg, index) => {
             const isSystem = msg.type === 'system' || !msg.sender;
             if (isSystem) {
               return (
-                <div key={msg._id || index} className="system-event">
-                  <span className="system-event-text">{msg.text}</span>
+                <div key={msg._id || index} className="wa-system-pill">
+                  {msg.text}
                 </div>
               );
             }
@@ -132,35 +128,32 @@ export default function ChatRoom({
             return (
               <React.Fragment key={msg._id || index}>
                 {showDateDivider && (
-                  <div className="date-divider">
-                    <span className="date-badge">{messageDate}</span>
+                  <div className="wa-date-divider">
+                    <span className="wa-date-pill">{messageDate}</span>
                   </div>
                 )}
-                <div className={`message-row ${isSelf ? 'self' : 'other'}`}>
-                  {!isSelf && (
-                    <div
-                      className="message-avatar"
-                      style={{ backgroundColor: msg.sender?.avatarColor || '#4F46E5' }}
-                    >
-                      {getInitials(msg.sender?.username)}
-                    </div>
-                  )}
 
-                  <div className="message-content">
-                    <div className="message-meta">
-                      <span className="message-sender">
-                        {isSelf ? 'You' : msg.sender?.username}
-                      </span>
-                      {msg.sender?.isGuest && (
-                        <span className="guest-pill">Guest</span>
-                      )}
-                      <span className="message-time">
+                <div className={`wa-msg-wrapper ${isSelf ? 'self' : 'other'}`}>
+                  <div className="wa-msg-bubble">
+                    {!isSelf && (
+                      <div
+                        className="wa-msg-sender"
+                        style={{ color: msg.sender?.avatarColor || '#00a884' }}
+                      >
+                        <span>{msg.sender?.username}</span>
+                        {msg.sender?.isGuest && (
+                          <span className="wa-guest-tag">Guest</span>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="wa-msg-text">{msg.text}</div>
+
+                    <div className="wa-msg-footer">
+                      <span className="wa-msg-time">
                         {formatTime(msg.createdAt)}
                       </span>
-                    </div>
-
-                    <div className="message-bubble">
-                      {msg.text}
+                      {isSelf && <span className="wa-msg-ticks">✓✓</span>}
                     </div>
                   </div>
                 </div>
@@ -171,14 +164,11 @@ export default function ChatRoom({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Typing Indicator */}
-      <TypingIndicator typingUsers={typingUsers} />
-
-      {/* Message Input Box */}
+      {/* WhatsApp Message Input */}
       <MessageInput
         onSendMessage={onSendMessage}
         onTyping={onTyping}
-        placeholder={`Message #${room.displayName || room.name}...`}
+        placeholder="Type a message..."
       />
     </div>
   );

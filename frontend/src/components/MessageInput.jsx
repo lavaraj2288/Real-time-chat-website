@@ -9,15 +9,10 @@ export default function MessageInput({ onSendMessage, onTyping, placeholder }) {
   const typingTimerRef = useRef(null);
   const isTypingRef = useRef(false);
 
-  // Stop typing on unmount
   useEffect(() => {
     return () => {
-      if (typingTimerRef.current) {
-        clearTimeout(typingTimerRef.current);
-      }
-      if (isTypingRef.current && onTyping) {
-        onTyping(false);
-      }
+      if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
+      if (isTypingRef.current && onTyping) onTyping(false);
     };
   }, [onTyping]);
 
@@ -25,16 +20,13 @@ export default function MessageInput({ onSendMessage, onTyping, placeholder }) {
     const val = e.target.value;
     setText(val);
 
-    // Typing debouncer
     if (onTyping) {
       if (!isTypingRef.current) {
         isTypingRef.current = true;
         onTyping(true);
       }
 
-      if (typingTimerRef.current) {
-        clearTimeout(typingTimerRef.current);
-      }
+      if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
 
       typingTimerRef.current = setTimeout(() => {
         isTypingRef.current = false;
@@ -54,11 +46,9 @@ export default function MessageInput({ onSendMessage, onTyping, placeholder }) {
     if (e) e.preventDefault();
 
     const trimmed = text.trim();
-    if (!trimmed) return; // Prevent sending empty messages
+    if (!trimmed) return;
 
-    if (typingTimerRef.current) {
-      clearTimeout(typingTimerRef.current);
-    }
+    if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
     if (isTypingRef.current && onTyping) {
       isTypingRef.current = false;
       onTyping(false);
@@ -67,7 +57,6 @@ export default function MessageInput({ onSendMessage, onTyping, placeholder }) {
     onSendMessage(trimmed);
     setText('');
 
-    // Reset height
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
@@ -81,36 +70,40 @@ export default function MessageInput({ onSendMessage, onTyping, placeholder }) {
   };
 
   return (
-    <div className="message-input-area">
-      <div className="quick-emojis">
+    <div className="wa-input-container">
+      {/* Quick emoji reactions */}
+      <div className="wa-emoji-bar">
         {QUICK_EMOJIS.map((emoji) => (
           <button
             key={emoji}
             type="button"
-            className="emoji-pill"
+            className="wa-emoji-btn"
             onClick={() => handleAddEmoji(emoji)}
-            title="Quick reaction"
+            title="Quick emoji"
           >
             {emoji}
           </button>
         ))}
       </div>
 
-      <form className="input-form" onSubmit={handleSubmit}>
-        <textarea
-          ref={textareaRef}
-          className="chat-textarea"
-          rows={1}
-          placeholder={placeholder || 'Type your message... (Enter to send)'}
-          value={text}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-        />
+      <form className="wa-input-row" onSubmit={handleSubmit}>
+        <div className="wa-input-box">
+          <textarea
+            ref={textareaRef}
+            className="wa-input-textarea"
+            rows={1}
+            placeholder={placeholder || 'Type a message...'}
+            value={text}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+
         <button
           type="submit"
-          className="btn-send"
+          className="wa-btn-send"
           disabled={!text.trim()}
-          title="Send message"
+          title="Send"
         >
           <svg viewBox="0 0 24 24">
             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />

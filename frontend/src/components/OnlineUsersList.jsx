@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/OnlineUsers.css';
 
-export default function OnlineUsersList({ users = [], isOpen, onClose, currentUsername }) {
+export default function OnlineUsersList({ users = [], isOpen, onClose, currentUsername, room }) {
   if (!isOpen) return null;
 
   const getInitials = (name) => {
@@ -10,53 +10,71 @@ export default function OnlineUsersList({ users = [], isOpen, onClose, currentUs
   };
 
   return (
-    <aside className="online-users-panel">
-      <div className="online-header">
-        <div className="online-title">
-          <span>In Channel</span>
-          <span className="count-pill">{users.length}</span>
+    <div className="wa-info-overlay" onClick={onClose}>
+      <div className="wa-info-panel" onClick={(e) => e.stopPropagation()}>
+        {/* Header */}
+        <div className="wa-info-header">
+          <button
+            type="button"
+            className="wa-icon-btn"
+            onClick={onClose}
+            title="Close"
+          >
+            ✕
+          </button>
+          <div className="wa-info-header-title">Group Info</div>
         </div>
-        <button
-          type="button"
-          className="btn-close-panel"
-          onClick={onClose}
-          title="Hide online users"
-        >
-          ✕
-        </button>
-      </div>
 
-      <div className="online-list">
-        {users.length === 0 ? (
-          <div style={{ fontSize: 12, color: 'var(--text-muted)', textAlign: 'center', padding: '16px' }}>
-            No members online
+        <div className="wa-info-body">
+          {/* Hero details */}
+          <div className="wa-info-hero">
+            <div className="wa-info-avatar">
+              {getInitials(room?.displayName || room?.name || 'Group')}
+            </div>
+            <h2 className="wa-info-title">#{room?.displayName || room?.name}</h2>
+            <p className="wa-info-desc">{room?.topic || 'A friendly place to chat'}</p>
           </div>
-        ) : (
-          users.map((user) => {
-            const isMe = user.username === currentUsername;
-            return (
-              <div key={user.socketId || user.username} className="online-user-item">
-                <div
-                  className="online-user-avatar"
-                  style={{ backgroundColor: user.avatarColor || '#4F46E5' }}
-                >
-                  {getInitials(user.username)}
-                  <span className="online-dot" />
+
+          {/* Participants list */}
+          <div>
+            <div className="wa-section-title">
+              Participants ({users.length} Online)
+            </div>
+            <div className="wa-members-list">
+              {users.length === 0 ? (
+                <div style={{ color: 'var(--text-muted)', fontSize: 13, padding: '10px 0' }}>
+                  No members online right now
                 </div>
-                <div className="online-user-info">
-                  <div className="online-user-name">
-                    {user.username} {isMe && '(You)'}
-                  </div>
-                  <div className="online-user-status">
-                    <span>🟢 online</span>
-                    {user.isGuest && <span className="guest-pill">Guest</span>}
-                  </div>
-                </div>
-              </div>
-            );
-          })
-        )}
+              ) : (
+                users.map((user) => {
+                  const isMe = user.username === currentUsername;
+                  return (
+                    <div key={user.socketId || user.username} className="wa-member-row">
+                      <div
+                        className="wa-member-avatar"
+                        style={{ backgroundColor: user.avatarColor || '#4F46E5' }}
+                      >
+                        {getInitials(user.username)}
+                        <span className="wa-member-online-dot" />
+                      </div>
+                      <div className="wa-member-details">
+                        <div className="wa-member-name">
+                          <span>{user.username}</span>
+                          {isMe && <span className="wa-you-badge">You</span>}
+                          {user.isGuest && <span className="wa-guest-tag">Guest</span>}
+                        </div>
+                        <div className="wa-member-status">
+                          <span>🟢 Online</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-    </aside>
+    </div>
   );
 }

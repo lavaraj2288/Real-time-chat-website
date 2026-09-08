@@ -1,304 +1,296 @@
-.chat-wrapper {
-  display: flex;
-  flex: 1;
-  height: 100%;
-  overflow: hidden;
-}
-
-.chat-center {
-  flex: 1;
+/* WhatsApp Group Chat Screen */
+.wa-chat-screen {
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-width: 0;
+  width: 100%;
+  background-color: var(--wa-bg-deep);
   position: relative;
+  overflow: hidden;
 }
 
-/* Chat Header */
-.chat-header {
-  height: 64px;
-  background-color: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
-  padding: 0 20px;
+/* WhatsApp Group Header */
+.wa-group-header {
+  height: 62px;
+  background-color: var(--wa-bg-surface);
+  padding: 8px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
-  z-index: 10;
+  z-index: 50;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-.chat-header-left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-}
-
-.btn-mobile-menu {
-  display: none;
-  color: var(--text-secondary);
-  font-size: 20px;
-  padding: 6px;
-  border-radius: var(--radius-sm);
-}
-
-.btn-mobile-menu:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-@media (max-width: 768px) {
-  .btn-mobile-menu {
-    display: flex;
-  }
-}
-
-.header-room-details {
-  min-width: 0;
-}
-
-.header-room-title {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.header-room-title .prefix {
-  color: var(--accent-secondary);
-  font-family: var(--font-mono);
-}
-
-.header-room-topic {
-  font-size: 12px;
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 500px;
-}
-
-.chat-header-actions {
+.wa-header-left {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
+  cursor: pointer;
 }
 
-.btn-toggle-members {
+.wa-btn-back {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.btn-toggle-members:hover,
-.btn-toggle-members.active {
-  background: var(--bg-active);
-  color: var(--text-primary);
-  border-color: var(--accent-primary);
-}
-
-.online-pill {
-  width: 8px;
-  height: 8px;
-  background: var(--online-green);
-  border-radius: var(--radius-full);
-}
-
-/* Messages Scroll View */
-.messages-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.date-divider {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  margin: 14px 0;
-}
-
-.date-divider::before,
-.date-divider::after {
-  content: '';
-  flex: 1;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.date-badge {
-  padding: 4px 12px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-muted);
-  background: var(--bg-secondary);
-  border-radius: var(--radius-full);
-  margin: 0 12px;
-  border: 1px solid var(--border-color);
-}
-
-/* System Message Pill */
-.system-event {
-  display: flex;
   justify-content: center;
-  margin: 6px 0;
-}
-
-.system-event-text {
-  font-size: 11px;
-  color: var(--text-muted);
-  background: rgba(30, 41, 59, 0.6);
-  padding: 4px 12px;
-  border-radius: var(--radius-full);
-  font-style: italic;
-}
-
-/* Message Item */
-.message-row {
-  display: flex;
-  gap: 12px;
-  max-width: 78%;
-  animation: fadeInMsg 0.2s ease-out;
-}
-
-@keyframes fadeInMsg {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.message-row.self {
-  align-self: flex-end;
-  flex-direction: row-reverse;
-}
-
-.message-avatar {
+  color: var(--text-primary);
+  font-size: 26px;
+  font-weight: 300;
   width: 34px;
   height: 34px;
-  border-radius: var(--radius-full);
+  border-radius: 50%;
+  padding-bottom: 2px;
+}
+
+.wa-btn-back:hover {
+  background-color: var(--wa-bg-surface-hover);
+}
+
+.wa-group-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00a884, #128c7e);
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
   font-weight: 700;
-  color: #fff;
+  font-size: 16px;
   flex-shrink: 0;
 }
 
-.message-content {
+.wa-group-meta {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.message-meta {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-
-.message-row.self .message-meta {
-  justify-content: flex-end;
-}
-
-.message-sender {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-secondary);
-}
-
-.guest-pill {
-  font-size: 9px;
-  padding: 1px 5px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-sm);
-  color: var(--text-muted);
-  text-transform: uppercase;
-}
-
-.message-time {
-  font-size: 10px;
-  color: var(--text-muted);
-}
-
-.message-bubble {
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  line-height: 1.5;
-  word-break: break-word;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-}
-
-.message-row.other .message-bubble {
-  background-color: var(--bg-bubble-other);
+.wa-group-title {
+  font-size: 16px;
+  font-weight: 600;
   color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  border-top-left-radius: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
-.message-row.self .message-bubble {
-  background-color: var(--bg-bubble-self);
-  color: #ffffff;
-  border-top-right-radius: 2px;
+@media (min-width: 600px) {
+  .wa-group-title {
+    max-width: 380px;
+  }
 }
 
-/* Typing notification bar */
-.typing-bar {
-  height: 24px;
-  padding: 0 24px;
+.wa-group-subtitle {
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+@media (min-width: 600px) {
+  .wa-group-subtitle {
+    max-width: 400px;
+  }
+}
+
+.wa-group-subtitle.typing {
+  color: var(--wa-green-light);
+  font-weight: 600;
+}
+
+.wa-header-right {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-style: italic;
+  gap: 6px;
 }
 
-.typing-dots {
-  display: inline-flex;
-  gap: 3px;
-}
-
-.typing-dot {
-  width: 4px;
-  height: 4px;
-  background: var(--accent-secondary);
+.wa-header-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: var(--wa-bg-panel);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-full);
-  animation: typingBounce 1.2s infinite ease-in-out;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
-.typing-dot:nth-child(2) {
-  animation-delay: 0.2s;
+.wa-header-pill:hover,
+.wa-header-pill.active {
+  background-color: var(--wa-bg-active);
+  border-color: var(--wa-green);
 }
 
-.typing-dot:nth-child(3) {
-  animation-delay: 0.4s;
+.wa-online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--wa-green-light);
+  box-shadow: 0 0 6px var(--wa-green-light);
 }
 
-@keyframes typingBounce {
-  0%, 80%, 100% {
-    transform: scale(0);
+/* WhatsApp Messages Container */
+.wa-messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* WhatsApp Dark background pattern */
+  background-color: #0b141a;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Date Separator */
+.wa-date-divider {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.wa-date-pill {
+  background-color: #182229;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* System Message Pill */
+.wa-system-pill {
+  align-self: center;
+  background-color: rgba(24, 34, 41, 0.9);
+  color: var(--text-secondary);
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: var(--radius-md);
+  margin: 4px 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Message Bubble */
+.wa-msg-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 82%;
+  position: relative;
+  margin-bottom: 2px;
+}
+
+@media (min-width: 768px) {
+  .wa-msg-wrapper {
+    max-width: 65%;
   }
-  40% {
-    transform: scale(1);
-  }
+}
+
+.wa-msg-wrapper.self {
+  align-self: flex-end;
+}
+
+.wa-msg-wrapper.other {
+  align-self: flex-start;
+}
+
+.wa-msg-bubble {
+  padding: 6px 9px 8px;
+  border-radius: var(--radius-md);
+  position: relative;
+  box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.25);
+  word-break: break-word;
+}
+
+.wa-msg-wrapper.self .wa-msg-bubble {
+  background-color: var(--wa-bubble-self);
+  border-top-right-radius: 0px;
+}
+
+.wa-msg-wrapper.other .wa-msg-bubble {
+  background-color: var(--wa-bubble-other);
+  border-top-left-radius: 0px;
+}
+
+.wa-msg-sender {
+  font-size: 12.5px;
+  font-weight: 700;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wa-guest-tag {
+  font-size: 9px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 1px 4px;
+  border-radius: 3px;
+  color: #d1d7db;
+  font-weight: normal;
+}
+
+.wa-msg-text {
+  font-size: 14.2px;
+  line-height: 1.42;
+  color: var(--text-primary);
+  margin-right: 64px; /* Space for timestamp and ticks */
+}
+
+.wa-msg-footer {
+  position: absolute;
+  right: 7px;
+  bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wa-msg-time {
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.wa-msg-ticks {
+  color: var(--wa-blue-ticks);
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* Empty room state */
+.wa-empty-chat {
+  margin: auto;
+  text-align: center;
+  max-width: 320px;
+  background-color: #182229;
+  padding: 24px 20px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.wa-empty-icon {
+  font-size: 44px;
+  margin-bottom: 12px;
+}
+
+.wa-empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.wa-empty-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
 }

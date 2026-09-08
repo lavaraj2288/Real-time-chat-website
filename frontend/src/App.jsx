@@ -24,13 +24,12 @@ export default function App() {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [typingUsers, setTypingUsers] = useState([]);
   const [isCreateRoomOpen, setIsCreateRoomOpen] = useState(false);
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const [isOnlineUsersOpen, setIsOnlineUsersOpen] = useState(true);
+  const [isGroupInfoOpen, setIsGroupInfoOpen] = useState(false);
+  const [mobileView, setMobileView] = useState('room'); // 'chats' | 'room'
 
   const socketRef = useRef(null);
   const currentRoomRef = useRef(currentRoom);
 
-  // Keep ref up to date for socket callbacks
   useEffect(() => {
     currentRoomRef.current = currentRoom;
   }, [currentRoom]);
@@ -102,7 +101,7 @@ export default function App() {
           {
             _id: `sys-join-${Date.now()}-${Math.random()}`,
             type: 'system',
-            text: `${username} joined the chat.`,
+            text: `${username} joined the group.`,
             createdAt: new Date()
           }
         ]);
@@ -116,7 +115,7 @@ export default function App() {
           {
             _id: `sys-leave-${Date.now()}-${Math.random()}`,
             type: 'system',
-            text: `${username} left the chat.`,
+            text: `${username} left the group.`,
             createdAt: new Date()
           }
         ]);
@@ -171,13 +170,14 @@ export default function App() {
   };
 
   const handleSelectRoom = (room) => {
-    if (currentRoom?.name === room.name) return;
     setCurrentRoom(room);
+    setMobileView('room'); // Switch to full chat screen on mobile
   };
 
   const handleRoomCreated = (newRoom) => {
     setRooms((prev) => [...prev, newRoom]);
     setCurrentRoom(newRoom);
+    setMobileView('room');
   };
 
   const handleLogout = () => {
@@ -196,14 +196,8 @@ export default function App() {
   }
 
   return (
-    <div className="app-container">
-      {/* Mobile Backdrop */}
-      <div
-        className={`mobile-overlay ${isMobileSidebarOpen ? 'active' : ''}`}
-        onClick={() => setIsMobileSidebarOpen(false)}
-      />
-
-      {/* Left Sidebar */}
+    <div className={`app-container ${mobileView === 'chats' ? 'mobile-chats' : 'mobile-room'}`}>
+      {/* WhatsApp Chats List / Sidebar */}
       <Sidebar
         rooms={rooms}
         currentRoom={currentRoom}
@@ -211,37 +205,33 @@ export default function App() {
         currentUser={currentUser}
         onLogout={handleLogout}
         onOpenCreateRoom={() => setIsCreateRoomOpen(true)}
-        isMobileOpen={isMobileSidebarOpen}
-        onCloseMobile={() => setIsMobileSidebarOpen(false)}
       />
 
-      {/* Main Chat Area */}
+      {/* WhatsApp Group Chat Screen */}
       <main className="main-chat-container">
-        <div className="chat-wrapper">
-          <ChatRoom
-            room={currentRoom}
-            messages={messages}
-            currentUser={currentUser}
-            typingUsers={typingUsers}
-            onSendMessage={handleSendMessage}
-            onTyping={handleTyping}
-            onToggleSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-            isOnlineUsersOpen={isOnlineUsersOpen}
-            onToggleOnlineUsers={() => setIsOnlineUsersOpen(!isOnlineUsersOpen)}
-            onlineCount={onlineUsers.length}
-          />
-
-          {/* Collapsible Right Panel for Online Users */}
-          <OnlineUsersList
-            users={onlineUsers}
-            isOpen={isOnlineUsersOpen}
-            onClose={() => setIsOnlineUsersOpen(false)}
-            currentUsername={currentUser.username}
-          />
-        </div>
+        <ChatRoom
+          room={currentRoom}
+          messages={messages}
+          currentUser={currentUser}
+          typingUsers={typingUsers}
+          onlineUsers={onlineUsers}
+          onSendMessage={handleSendMessage}
+          onTyping={handleTyping}
+          onBackToChats={() => setMobileView('chats')}
+          onOpenGroupInfo={() => setIsGroupInfoOpen(true)}
+        />
       </main>
 
-      {/* Create Room Modal */}
+      {/* WhatsApp Group Info Drawer / Modal */}
+      <OnlineUsersList
+        room={currentRoom}
+        users={onlineUsers}
+        isOpen={isGroupInfoOpen}
+        onClose={() => setIsGroupInfoOpen(false)}
+        currentUsername={currentUser.username}
+      />
+
+      {/* Create New Group Modal */}
       {isCreateRoomOpen && (
         <CreateRoomModal
           currentUser={currentUser}
