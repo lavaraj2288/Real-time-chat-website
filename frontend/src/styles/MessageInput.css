@@ -18,6 +18,14 @@
 }
 
 /* Hide any injected Netlify HUD/badge so it never blocks chat buttons */
+iframe,
+.nl-wrap,
+.nl-badge,
+.nl-card,
+.nl-mini,
+.nl-bar,
+[class*="nl-"],
+[id*="nl-"],
 netlify-drawer,
 #netlify-drawer,
 [data-netlify-deploy-id],
