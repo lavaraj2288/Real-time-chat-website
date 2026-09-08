@@ -1,6 +1,8 @@
 const BASE_URL =
   import.meta.env.VITE_BACKEND_URL ||
-  (window.location.port === '5173' ? 'http://localhost:5000' : '');
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000'
+    : 'https://real-time-chat-website-k7i0.onrender.com');
 
 const request = async (endpoint, options = {}) => {
   const token = localStorage.getItem('chat_token');
