@@ -124,26 +124,25 @@ iframe[id*="netlify"],
 }
 
 .wa-btn-send {
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background-color: #374248;
-  color: #8696a0;
+  background-color: var(--wa-green);
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
-  transition: background-color 0.15s, transform 0.1s, color 0.15s;
+  transition: background-color 0.15s, transform 0.1s, opacity 0.15s;
 }
 
-.wa-btn-send.has-text {
-  background-color: var(--wa-green);
-  color: #ffffff;
-  cursor: pointer;
+.wa-btn-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.wa-btn-send.has-text:hover {
+.wa-btn-send:not(:disabled):hover {
   background-color: var(--wa-teal);
   transform: scale(1.06);
 }
