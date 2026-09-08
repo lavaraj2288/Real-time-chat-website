@@ -9,10 +9,21 @@
   z-index: 40;
 }
 
+/* Hide any injected Netlify HUD/badge on mobile so it doesn't block buttons */
+iframe[id*="netlify"],
+div[id*="netlify"],
+[data-netlify-deploy-id],
+[class*="netlify-hud"],
+[class*="feedback-button"],
+#netlify-identity-widget {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 @media (max-width: 768px) {
   .wa-input-container {
-    /* Extra clearance for mobile floating badges (e.g. Netlify) and home bar */
-    padding-bottom: 28px;
+    padding-bottom: 38px;
   }
 }
 

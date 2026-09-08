@@ -13,10 +13,12 @@ export default function ChatRoom({
   onBackToChats,
   onOpenGroupInfo
 }) {
-  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
   }, [messages, typingUsers]);
 
   const formatTime = (isoDate) => {
@@ -97,7 +99,7 @@ export default function ChatRoom({
       </header>
 
       {/* Messages Feed */}
-      <div className="wa-messages-area">
+      <div className="wa-messages-area" ref={messagesContainerRef}>
         {messages.length === 0 ? (
           <div className="wa-empty-chat">
             <div className="wa-empty-icon">💬</div>
@@ -161,7 +163,6 @@ export default function ChatRoom({
             );
           })
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* WhatsApp Message Input */}
